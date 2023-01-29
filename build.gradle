@@ -1,0 +1,43 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.8'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'io.dan-koller.github'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.0.Final'
+
+	// Lombok to reduce boilerplate code
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+	// Spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.0'
+
+	// Add Jackson JSON annotations
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
+
+	// Database
+	runtimeOnly 'com.h2database:h2:1.4.200'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Spring dotenv
+	implementation group: 'me.paulschwarz', name: 'spring-dotenv', version: '2.3.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
