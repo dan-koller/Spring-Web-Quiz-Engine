@@ -22,6 +22,13 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * This method is used to configure the {@link AuthenticationManagerBuilder} to specify which UserDetailsService and
+     * {@link PasswordEncoder} to use.
+     *
+     * @param auth The {@link AuthenticationManagerBuilder} to use
+     * @throws Exception If an error occurs
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -47,8 +54,8 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // Api endpoints
                 .mvcMatchers("/api/register").permitAll()
-                .mvcMatchers("/api/quizzes").authenticated()
-                .mvcMatchers("/api/quizzes/**").authenticated();
+                .mvcMatchers("/api/quizzes").hasRole("USER")
+                .mvcMatchers("/api/quizzes/**").hasRole("USER");
     }
 
     /**
