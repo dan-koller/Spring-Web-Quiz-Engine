@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
+@SuppressWarnings("unused")
 public class QuizService {
 
     @Autowired
@@ -32,6 +33,14 @@ public class QuizService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * This method is used to validate the answer to a quiz.
+     *
+     * @param username   The username of the user
+     * @param quizId     The id of the quiz
+     * @param userAnswer The answer that the user submitted
+     * @return A ResponseEntity with the result of the answer
+     */
     public ResponseEntity<?> validateAnswer(String username, int quizId, int[] userAnswer) {
         Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (quiz.getAnswer() == null && userAnswer.length == 0 || Arrays.equals(userAnswer, quiz.getAnswer())) {
@@ -42,28 +51,59 @@ public class QuizService {
         }
     }
 
-    // Helper method to mark a quiz as completed and save it to the database
+    /**
+     * Helper method to save a completed quiz to the database.
+     *
+     * @param quiz     The quiz that was completed
+     * @param username The username of the user
+     */
     private void markQuizAsCompleted(Quiz quiz, String username) {
         User user = userRepository.findByEmailIgnoreCase(username);
         CompletedQuiz completedQuiz = new CompletedQuiz(quiz.getId(), LocalDateTime.now(), user);
         completedQuizRepository.save(completedQuiz);
     }
 
+    /**
+     * THis method is used to get a quiz by its id.
+     *
+     * @param id The id of the quiz
+     * @return The quiz with the given id
+     */
     public Quiz getQuizById(int id) {
         return quizRepository.findById(id).orElse(null);
     }
 
-    public Page<Quiz> getAllQuizzes(int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("id"));
+    /**
+     * This method is used to get all quizzes from the database using pagination.
+     *
+     * @param page The page number
+     * @return A page of quizzes
+     */
+    public Page<Quiz> getAllQuizzes(int page, int pageSize, String sortBy) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortBy));
         return quizRepository.findAll(pageable);
     }
 
+    /**
+     * This method gets all quizzes that have been completed by a user.
+     *
+     * @param user The username of the user
+     * @param page The page number
+     * @return A page of completed quizzes
+     */
     public Page<CompletedQuiz> getAllQuizzesByCompletedAt(String user, int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "completedAt");
         User u = userRepository.findByEmailIgnoreCase(user);
         return completedQuizRepository.findAllByUser(u, pageable);
     }
 
+    /**
+     * This method allows the creation of a new quiz.
+     *
+     * @param author      The username of the user
+     * @param quizRequest The quiz request
+     * @return The quiz that was created
+     */
     public QuizResponse postQuiz(String author, QuizRequest quizRequest) {
         // Validate the quiz
         if (isValidQuizRequest(quizRequest)) {
@@ -83,6 +123,13 @@ public class QuizService {
         }
     }
 
+    /**
+     * This method is used to delete a quiz.
+     *
+     * @param user The username of the user
+     * @param id   The id of the quiz
+     * @return A ResponseEntity with the result of the deletion (status code)
+     */
     public ResponseEntity<?> deleteQuiz(String user, int id) {
         // Get the quiz from the database
         Quiz quiz = quizRepository.findById(id).orElse(null);
@@ -103,6 +150,14 @@ public class QuizService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * This method is used to update a quiz.
+     *
+     * @param user        The username of the user
+     * @param id          The id of the quiz
+     * @param quizRequest The quiz request
+     * @return A ResponseEntity with the result of the update (status code)
+     */
     public ResponseEntity<?> patchQuiz(String user, int id, QuizRequest quizRequest) {
         // Get the quiz from the database
         Quiz quiz = quizRepository.findById(id).orElse(null);
@@ -113,7 +168,7 @@ public class QuizService {
         }
 
         // If the user is not the author of the quiz, return a 403
-        if (!quiz.getAuthor().equals(user)) {
+        if (!quiz.getAuthor().getEmail().equals(user)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -137,20 +192,17 @@ public class QuizService {
         }
     }
 
-    // Helper method to validate a quiz request
+    /**
+     * A helper method to validate if a quiz request is a valid quiz.
+     *
+     * @param quizRequest The quiz request
+     * @return True if the quiz is valid, false otherwise
+     */
     private boolean isValidQuizRequest(QuizRequest quizRequest) {
-        // Check if the quiz is valid
-        if (quizRequest.getTitle() == null || quizRequest.getTitle().isEmpty()) {
-            return false;
-        }
-        if (quizRequest.getText() == null || quizRequest.getText().isEmpty()) {
-            return false;
-        }
-        if (quizRequest.getOptions() == null || quizRequest.getOptions().length < 2) {
-            return false;
-        }
+        boolean isValidTitle = quizRequest.getTitle() != null && !quizRequest.getTitle().isEmpty();
+        boolean isValidText = quizRequest.getText() != null && !quizRequest.getText().isEmpty();
+        boolean isValidOptions = quizRequest.getOptions() != null && quizRequest.getOptions().length >= 2;
         // The answer can be null, so we don't need to check it
-        return true;
+        return isValidTitle && isValidText && isValidOptions;
     }
-
 }

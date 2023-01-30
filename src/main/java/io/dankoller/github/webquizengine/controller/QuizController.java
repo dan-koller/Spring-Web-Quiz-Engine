@@ -1,6 +1,5 @@
 package io.dankoller.github.webquizengine.controller;
 
-
 import io.dankoller.github.webquizengine.entity.CompletedQuiz;
 import io.dankoller.github.webquizengine.entity.Quiz;
 import io.dankoller.github.webquizengine.entity.user.UserDetailsImpl;
@@ -18,13 +17,19 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
+@SuppressWarnings("unused")
 public class QuizController {
 
     @Autowired
     private QuizService quizService;
 
 
-    // Returns a quiz with the given id
+    /**
+     * This method returns a quiz by id.
+     *
+     * @param id The id of the quiz
+     * @return A ResponseEntity with the quiz or an empty array if the quiz is not found
+     */
     @GetMapping("/api/quizzes/{id}")
     public ResponseEntity<?> getQuizById(@PathVariable int id) {
         Quiz quiz = quizService.getQuizById(id);
@@ -35,14 +40,27 @@ public class QuizController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Get a list of all quizzes using a specific page like /api/quizzes?page=1
+    /**
+     * This method returns a list of all quizzes with paging.
+     *
+     * @param page The page number as a query parameter
+     * @return A ResponseEntity with a list of all quizzes
+     */
     @GetMapping("/api/quizzes")
-    public ResponseEntity<?> getAllQuizzesByPage(@RequestParam(required = false, defaultValue = "0") int page) {
-        Page<Quiz> quizzes = quizService.getAllQuizzes(page);
+    public ResponseEntity<?> getAllQuizzesByPage(@RequestParam(required = false, defaultValue = "0") int page,
+                                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                 @RequestParam(required = false, defaultValue = "id") String sortBy) {
+        Page<Quiz> quizzes = quizService.getAllQuizzes(page, pageSize, sortBy);
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
 
-    // Get a list of all quizzes with paging
+    /**
+     * This method returns a list of all quizzes that the user has completed with paging.
+     *
+     * @param user The logged-in user
+     * @param page The page number as a query parameter
+     * @return A ResponseEntity with a list of all quizzes that the user has completed
+     */
     @GetMapping("/api/quizzes/completed")
     public ResponseEntity<?> getAllQuizzesByStatusCompleted(
             @AuthenticationPrincipal UserDetailsImpl user,
@@ -51,7 +69,13 @@ public class QuizController {
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
 
-    // Post a new quiz
+    /**
+     * This method allows the user to create a new quiz.
+     *
+     * @param author      The logged-in user
+     * @param quizRequest The quiz request body
+     * @return A ResponseEntity with the newly created quiz
+     */
     @PostMapping("/api/quizzes")
     public ResponseEntity<?> postQuiz(@AuthenticationPrincipal UserDetailsImpl author,
                                       @RequestBody @Valid QuizRequest quizRequest) {
@@ -59,7 +83,14 @@ public class QuizController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Solve a quiz and check the answer
+    /**
+     * This method allows the user to solve a quiz.
+     *
+     * @param user   The logged-in user
+     * @param answer The answer request body
+     * @param id     The id of the quiz
+     * @return A ResponseEntity with the result of the quiz
+     */
     @PostMapping("/api/quizzes/{id}/solve")
     public ResponseEntity<?> postQuiz(@AuthenticationPrincipal UserDetailsImpl user,
                                       @RequestBody Map<String, int[]> answer,
@@ -69,7 +100,13 @@ public class QuizController {
         return quizService.validateAnswer(user.getUsername(), id, userAnswer);
     }
 
-    // Delete quizzes
+    /**
+     * This method allows the user to delete a quiz.
+     *
+     * @param user The logged-in user
+     * @param id   The id of the quiz
+     * @return A ResponseEntity with the result of the deletion
+     */
     @DeleteMapping("/api/quizzes/{id}")
     public ResponseEntity<?> deleteQuiz(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable int id) {
         // Check if there is a logged-in user
@@ -79,6 +116,14 @@ public class QuizController {
         return quizService.deleteQuiz(user.getUsername(), id);
     }
 
+    /**
+     * This method allows the user to update a quiz.
+     *
+     * @param user        The logged-in user
+     * @param quizRequest The quiz request body
+     * @param id          The id of the quiz
+     * @return A ResponseEntity with the result of the update
+     */
     @PatchMapping("/api/quizzes/{id}")
     public ResponseEntity<?> patchQuiz(@AuthenticationPrincipal UserDetailsImpl user,
                                        @RequestBody @Valid QuizRequest quizRequest,
