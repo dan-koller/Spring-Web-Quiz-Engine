@@ -11,12 +11,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 
+/**
+ * This class represents a completed quiz. The id field is the id of the quiz that was completed.
+ */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class CompletedQuiz {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore

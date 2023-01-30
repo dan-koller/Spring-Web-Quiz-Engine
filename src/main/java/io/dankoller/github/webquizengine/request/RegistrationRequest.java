@@ -8,6 +8,9 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 
+/**
+ * This class represents a request to register a new user.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

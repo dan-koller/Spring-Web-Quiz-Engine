@@ -8,12 +8,14 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * This class represents a quiz. Completed quizzes are stored in the CompletedQuiz class.
+ */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Quiz {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column

@@ -9,9 +9,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+/**
+ * This class represents a request to create a new quiz.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("unused")
 public class QuizRequest {
     @NotBlank
     private String title;
@@ -22,11 +26,11 @@ public class QuizRequest {
     private String[] options;
     private int[] answer; // can be null (= no correct answer)
 
-    // Validate the json request
+    // Constructor for Jackson to deserialize JSON to Java object
     public QuizRequest(@JsonProperty(required = true, value = "title") String title,
                        @JsonProperty(required = true, value = "text") String text,
                        @JsonProperty(required = true, value = "options") String[] options,
-                       @JsonProperty(required = false, value = "answer") int[] answer) {
+                       @JsonProperty(value = "answer") int[] answer) {
         this.title = title;
         this.text = text;
         this.options = options;

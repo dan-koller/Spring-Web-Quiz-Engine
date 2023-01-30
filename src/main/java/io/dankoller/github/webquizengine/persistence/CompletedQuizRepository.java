@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * This interface is used to access the completed quizzes in the database.
+ */
 @Repository
 public interface CompletedQuizRepository extends PagingAndSortingRepository<CompletedQuiz, Integer> {
     Page<CompletedQuiz> findAllByUser(User user, Pageable pageable);

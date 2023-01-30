@@ -5,13 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * This interface is used to access the users in the database.
+ */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     User findByEmailIgnoreCase(String email);
-
-    Optional<User> findUserByEmail(String email);
 
     List<User> findAll();
 }

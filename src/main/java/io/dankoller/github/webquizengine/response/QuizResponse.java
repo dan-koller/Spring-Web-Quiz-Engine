@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-// Object to return to the user (without the correct answer from the quiz object)
+/**
+ * This class is used to return a response to the user when they request a quiz.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

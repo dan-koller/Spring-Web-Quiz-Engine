@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * This class represents a user. It is used for authentication and authorization.
+ */
 @Entity
 @Getter
 @Setter

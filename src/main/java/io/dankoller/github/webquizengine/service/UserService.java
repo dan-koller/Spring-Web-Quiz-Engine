@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@SuppressWarnings("unused")
 public class UserService {
 
     @Autowired
@@ -18,6 +19,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * This method handles the registration of a new user.
+     *
+     * @param request The registration request
+     * @return A ResponseEntity with the result of the registration
+     */
     public ResponseEntity<?> register(RegistrationRequest request) {
         // Check if user already exists
         if (userRepository.findByEmailIgnoreCase(request.getEmail()) != null) {
@@ -35,11 +42,15 @@ public class UserService {
             // Save the user
             userRepository.save(user);
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Validate registration request
+    /**
+     * This method checks if the registration request is valid.
+     *
+     * @param request The registration request
+     * @return True if the request is valid, false otherwise
+     */
     private boolean isValidRegistrationRequest(RegistrationRequest request) {
         return request.getEmail() != null && request.getPassword() != null;
     }
