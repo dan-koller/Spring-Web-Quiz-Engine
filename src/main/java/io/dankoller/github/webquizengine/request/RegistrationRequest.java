@@ -18,6 +18,7 @@ import javax.validation.constraints.Email;
 public class RegistrationRequest {
     @Email(regexp = ".+@.+\\..+", message = "Email is not valid")
     private String email;
+
     @Length(min = 5)
     private String password;
 }

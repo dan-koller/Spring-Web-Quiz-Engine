@@ -19,11 +19,14 @@ import javax.validation.constraints.Size;
 public class QuizRequest {
     @NotBlank
     private String title;
+
     @NotBlank
     private String text;
+
     @NotEmpty
-    @Size(min = 2) // should at least have 2 options
-    private String[] options;
+    @Size(min = 2)
+    private String[] options; // should at least have 2 options
+
     private int[] answer; // can be null (= no correct answer)
 
     // Constructor for Jackson to deserialize JSON to Java object

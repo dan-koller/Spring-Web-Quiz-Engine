@@ -17,10 +17,13 @@ import javax.validation.constraints.NotEmpty;
 public class QuizResponse {
     @NotEmpty
     private int id;
+
     @NotEmpty
     private String title;
+
     @NotEmpty
     private String text;
+
     @NotEmpty
     private String[] options;
 }
