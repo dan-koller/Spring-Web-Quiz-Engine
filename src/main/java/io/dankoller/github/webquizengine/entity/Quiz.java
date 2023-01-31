@@ -33,7 +33,7 @@ public class Quiz {
 
     @ManyToOne
     @JsonIgnore
-    private User author;
+    private User author; // The AUTHOR_ID is correlated to the USER_ID in the COMPLETED_QUIZ table.
 
     public Quiz(String title, String text, String[] options, int[] answer, User author) {
         this.title = title;

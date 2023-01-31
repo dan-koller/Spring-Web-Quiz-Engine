@@ -36,7 +36,7 @@ public class CompletedQuiz {
     @NotNull
     @ManyToOne
     @JsonIgnore
-    private User user;
+    private User user; // The USER_ID is correlated to the AUTHOR_ID in the QUIZ table.
 
     public CompletedQuiz(int id, LocalDateTime completedAt, User user) {
         this.id = id;
