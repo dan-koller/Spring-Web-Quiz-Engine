@@ -5,6 +5,8 @@ import io.dankoller.github.webquizengine.entity.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -32,6 +34,7 @@ public class Quiz {
     private int[] answer;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User author; // The AUTHOR_ID is correlated to the USER_ID in the COMPLETED_QUIZ table.
 
