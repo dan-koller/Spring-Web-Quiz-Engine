@@ -80,21 +80,21 @@ public class QuizService {
      * @return A page of quizzes
      */
     public Page<Quiz> getAllQuizzes(int page, int pageSize, String sortBy) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, sortBy);
         return quizRepository.findAll(pageable);
     }
 
     /**
      * This method gets all quizzes that have been completed by a user.
      *
-     * @param user The username of the user
+     * @param username The username of the user
      * @param page The page number
      * @return A page of completed quizzes
      */
-    public Page<CompletedQuiz> getAllQuizzesByCompletedAt(String user, int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "completedAt");
-        User u = userRepository.findByEmailIgnoreCase(user);
-        return completedQuizRepository.findAllByUser(u, pageable);
+    public Page<CompletedQuiz> getCompletedQuizzes(String username, int page, int pageSize, String sortBy) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, sortBy);
+        User user = userRepository.findByEmailIgnoreCase(username);
+        return completedQuizRepository.findAllByUser(user, pageable);
     }
 
     /**

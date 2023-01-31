@@ -23,7 +23,6 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-
     /**
      * This method returns a quiz by id.
      *
@@ -47,9 +46,9 @@ public class QuizController {
      * @return A ResponseEntity with a list of all quizzes
      */
     @GetMapping("/api/quizzes")
-    public ResponseEntity<?> getAllQuizzesByPage(@RequestParam(required = false, defaultValue = "0") int page,
-                                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                                 @RequestParam(required = false, defaultValue = "id") String sortBy) {
+    public ResponseEntity<?> getAllQuizzes(@RequestParam(required = false, defaultValue = "0") int page,
+                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(required = false, defaultValue = "id") String sortBy) {
         Page<Quiz> quizzes = quizService.getAllQuizzes(page, pageSize, sortBy);
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
@@ -62,10 +61,12 @@ public class QuizController {
      * @return A ResponseEntity with a list of all quizzes that the user has completed
      */
     @GetMapping("/api/quizzes/completed")
-    public ResponseEntity<?> getAllQuizzesByStatusCompleted(
+    public ResponseEntity<?> getCompletedQuizzes(
             @AuthenticationPrincipal UserDetailsImpl user,
-            @RequestParam(required = false, defaultValue = "0") int page) {
-        Page<CompletedQuiz> quizzes = quizService.getAllQuizzesByCompletedAt(user.getUsername(), page);
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "completedAt") String sortBy) {
+        Page<CompletedQuiz> quizzes = quizService.getCompletedQuizzes(user.getUsername(), page, pageSize, sortBy);
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
 
@@ -92,9 +93,9 @@ public class QuizController {
      * @return A ResponseEntity with the result of the quiz
      */
     @PostMapping("/api/quizzes/{id}/solve")
-    public ResponseEntity<?> postQuiz(@AuthenticationPrincipal UserDetailsImpl user,
-                                      @RequestBody Map<String, int[]> answer,
-                                      @PathVariable int id) {
+    public ResponseEntity<?> solveQuiz(@AuthenticationPrincipal UserDetailsImpl user,
+                                       @RequestBody Map<String, int[]> answer,
+                                       @PathVariable int id) {
         // If the map is empty, default value should be an empty array
         int[] userAnswer = answer.getOrDefault("answer", new int[0]);
         return quizService.validateAnswer(user.getUsername(), id, userAnswer);
@@ -109,10 +110,6 @@ public class QuizController {
      */
     @DeleteMapping("/api/quizzes/{id}")
     public ResponseEntity<?> deleteQuiz(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable int id) {
-        // Check if there is a logged-in user
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
         return quizService.deleteQuiz(user.getUsername(), id);
     }
 
@@ -128,10 +125,6 @@ public class QuizController {
     public ResponseEntity<?> patchQuiz(@AuthenticationPrincipal UserDetailsImpl user,
                                        @RequestBody @Valid QuizRequest quizRequest,
                                        @PathVariable int id) {
-        // Check if there is a logged-in user
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
         return quizService.patchQuiz(user.getUsername(), id, quizRequest);
     }
 }
