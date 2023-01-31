@@ -19,6 +19,7 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,8 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SpringWebQuizEngineApplicationTests {
 
     // Users
-    private final String validUserEmail = "testuser@gmail.com";
-    private final String validUserPassword = "secret";
+    private static final String randomUserId = UUID.randomUUID().toString().substring(0, 10).replaceAll("-", "");
+    private final String validUserEmail = randomUserId + "@gmail.com";
+    private static final String validUserPassword = UUID.randomUUID().toString().substring(0, 10);
     private final String invalidUserEmail = "test.@.com";
     private final String invalidUserPassword = "test";
 
@@ -55,7 +57,7 @@ class SpringWebQuizEngineApplicationTests {
 
     // Answers
     private final String validAnswerJson = "{\"answer\":[2]}";
-    private final String invalidAnswerJson = "{\"answer\":[]}";
+    private final String invalidAnswerJson = "{\"answer\":[0]}";
 
     @Autowired
     private MockMvc mockMvc;
@@ -138,8 +140,7 @@ class SpringWebQuizEngineApplicationTests {
     void testGetSpecificQuiz() throws Exception {
         // Set the user as authenticated
         setUserAsAuthenticated();
-        int quizId = quizRepository.findAll().get(0).getId();
-        mockMvc.perform(get("/api/quizzes/" + quizId))
+        mockMvc.perform(get("/api/quizzes/" + getLatestQuizId()))
                 .andExpect(status().isOk());
     }
 
@@ -149,15 +150,13 @@ class SpringWebQuizEngineApplicationTests {
     void testSolveQuiz() throws Exception {
         // Set the user as authenticated
         setUserAsAuthenticated();
-        // Test valid answer
-        int quizId = quizRepository.findAll().get(0).getId();
-        mockMvc.perform(post("/api/quizzes/" + quizId + "/solve")
+        mockMvc.perform(post("/api/quizzes/" + getLatestQuizId() + "/solve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validAnswerJson))
                 .andExpect(status().isOk());
 
         // Test invalid answer
-        mockMvc.perform(post("/api/quizzes/" + quizId + "/solve")
+        mockMvc.perform(post("/api/quizzes/" + getLatestQuizId() + "/solve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidAnswerJson))
                 .andExpect(status().isOk())
@@ -181,9 +180,7 @@ class SpringWebQuizEngineApplicationTests {
     void testPatchQuiz() throws Exception {
         // Set the user as authenticated
         setUserAsAuthenticated();
-        // Test valid quiz patch
-        int quizId = quizRepository.findAll().get(0).getId();
-        mockMvc.perform(patch("/api/quizzes/" + quizId)
+        mockMvc.perform(patch("/api/quizzes/" + getLatestQuizId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patchedQuizJson))
                 .andExpect(status().isOk());
@@ -195,13 +192,11 @@ class SpringWebQuizEngineApplicationTests {
     void testDeleteQuiz() throws Exception {
         // Set the user as authenticated
         setUserAsAuthenticated();
-        // Test valid quiz delete
-        int quizId = quizRepository.findAll().get(0).getId();
-        mockMvc.perform(delete("/api/quizzes/" + quizId))
+        mockMvc.perform(delete("/api/quizzes/" + getLatestQuizId()))
                 .andExpect(status().isNoContent());
 
         // Test invalid quiz delete
-        mockMvc.perform(delete("/api/quizzes/999999999"))
+        mockMvc.perform(delete("/api/quizzes/" + Integer.MAX_VALUE))
                 .andExpect(status().isNotFound());
     }
 
