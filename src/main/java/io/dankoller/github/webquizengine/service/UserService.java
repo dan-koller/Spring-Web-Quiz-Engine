@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 @SuppressWarnings("unused")
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -35,10 +33,8 @@ public class UserService {
         if (isValidRegistrationRequest(request)) {
             // Create a new user
             User user = new User(request.getEmail(), request.getPassword());
-
             // Salt the password and encode it
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-
             // Save the user
             userRepository.save(user);
         }

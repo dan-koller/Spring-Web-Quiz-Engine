@@ -22,7 +22,6 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private int id;
-
     @Column
     private String title;
     @Column
@@ -32,7 +31,6 @@ public class Quiz {
     @Column
     @JsonIgnore
     private int[] answer;
-
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

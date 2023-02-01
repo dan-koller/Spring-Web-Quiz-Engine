@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @SuppressWarnings({"unused", "deprecation"})
 public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
-
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final UserDetailsServiceImpl userDetailsService;
 

@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 class SpringWebQuizEngineApplicationTests {
-
     // Users
     private static final String randomUserId = UUID.randomUUID().toString().substring(0, 10).replaceAll("-", "");
     private final String validUserEmail = randomUserId + "@gmail.com";
@@ -44,12 +43,10 @@ class SpringWebQuizEngineApplicationTests {
             "\"text\":\"What is depicted on the Java logo?\"," +
             "\"options\":[\"Robot\",\"Tea leaf\",\"Cup of coffee\",\"Bug\"]," +
             "\"answer\":[2]}";
-
     private final String invalidQuizJson = "{\"title\":\"The Java Logo\"," +
             "\"text\":\"What is depicted on the Java logo?\"," +
             "\"options\":[\"Robot\"]," +
             "\"answer\":[2, 3]}";
-
     private final String patchedQuizJson = "{\"title\":\"Math\"," +
             "\"text\":\"Which of the following is equal to 4?\"," +
             "\"options\":[\"1+1\",\"2+2\",\"8-1\",\"5-1\"]," +
@@ -61,19 +58,14 @@ class SpringWebQuizEngineApplicationTests {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private QuizRepository quizRepository;
-
     @Autowired
     private CompletedQuizRepository completedQuizRepository;
-
     @Autowired
     private QuizService quizService;
 

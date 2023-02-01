@@ -25,16 +25,13 @@ public class CompletedQuiz {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private int completionId;
-
     @Column
     @NotNull
     private int id;
-
     @Column
     @NotNull
     @PastOrPresent
     private LocalDateTime completedAt;
-
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)

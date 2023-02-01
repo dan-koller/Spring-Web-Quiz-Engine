@@ -10,7 +10,6 @@ import java.util.List;
  * This class implements the UserDetails interface and is used by Spring Security.
  */
 public class UserDetailsImpl implements UserDetails {
-
     private final String email;
     private final String password;
     private final List<GrantedAuthority> authorities;

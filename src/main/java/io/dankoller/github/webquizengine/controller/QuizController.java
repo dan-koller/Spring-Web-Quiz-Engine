@@ -19,7 +19,6 @@ import java.util.Map;
 @RestController
 @SuppressWarnings("unused")
 public class QuizController {
-
     @Autowired
     private QuizService quizService;
 

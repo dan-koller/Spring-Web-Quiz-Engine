@@ -13,7 +13,6 @@ import javax.validation.Valid;
 @RestController
 @SuppressWarnings("unused")
 public class UserController {
-
     @Autowired
     private UserService userService;
 

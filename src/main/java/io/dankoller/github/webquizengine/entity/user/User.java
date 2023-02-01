@@ -19,12 +19,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column
     @NotEmpty
     @Email
     private String email;
-
     @Column
     @NotEmpty
     private String password;

@@ -25,7 +25,6 @@ import java.util.Arrays;
 @Service
 @SuppressWarnings("unused")
 public class QuizService {
-
     @Autowired
     private QuizRepository quizRepository;
     @Autowired
@@ -88,7 +87,7 @@ public class QuizService {
      * This method gets all quizzes that have been completed by a user.
      *
      * @param username The username of the user
-     * @param page The page number
+     * @param page     The page number
      * @return A page of completed quizzes
      */
     public Page<CompletedQuiz> getCompletedQuizzes(String username, int page, int pageSize, String sortBy) {
@@ -133,20 +132,16 @@ public class QuizService {
     public ResponseEntity<?> deleteQuiz(String user, int id) {
         // Get the quiz from the database
         Quiz quiz = quizRepository.findById(id).orElse(null);
-
         // If the quiz doesn't exist, return a 404
         if (quiz == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         // If the user is not the author of the quiz, return a 403
         if (!quiz.getAuthor().getEmail().equals(user)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
         // Delete the quiz
         quizRepository.deleteById(id);
-        // Return a 204
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -161,17 +156,14 @@ public class QuizService {
     public ResponseEntity<?> patchQuiz(String user, int id, QuizRequest quizRequest) {
         // Get the quiz from the database
         Quiz quiz = quizRepository.findById(id).orElse(null);
-
         // If the quiz doesn't exist, return a 404
         if (quiz == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         // If the user is not the author of the quiz, return a 403
         if (!quiz.getAuthor().getEmail().equals(user)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
         // Validate the quiz
         if (isValidQuizRequest(quizRequest)) {
             // Update the quiz
@@ -181,7 +173,7 @@ public class QuizService {
             quiz.setAnswer(quizRequest.getAnswer());
             // Save the quiz to the database
             quizRepository.save(quiz);
-            // Return the quiz to the user
+            // Return a quiz response to the user
             return new ResponseEntity<>(new QuizResponse(
                     quiz.getId(),
                     quiz.getTitle(),

@@ -14,6 +14,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class QuizAnswerResponse {
     private boolean success;
-
     private String feedback;
 }
