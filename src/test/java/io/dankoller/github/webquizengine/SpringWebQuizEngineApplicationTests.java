@@ -224,7 +224,7 @@ class SpringWebQuizEngineApplicationTests {
     /**
      * Helper method to set the user as authenticated.
      */
-    void setUserAsAuthenticated() {
+    private void setUserAsAuthenticated() {
         // Add AuthenticationPrincipal to the SecurityContext
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken(validUserEmail, validUserPassword));
